@@ -1,18 +1,17 @@
 import { Github, Linkedin, Mail, Terminal } from "lucide-react";
 import Image from "next/image";
-import Header from "@/components/header";
 import ExperienceCard from "@/components/experienceCard";
 import SocialLink from "@/components/socialLink";
 import ScrollToTopButton from "@/components/ScrollToTopButton";
-import Link from "next/link";
+import TableOfContents from "@/components/tableOfContents";
 
 const Home = () => {
   return (
-    <div className="min-h-screen relative">
-      <Header />
+    <div className="min-h-screen relative pt-16">
+      <TableOfContents />
 
       <main className="max-w-6xl mx-auto px-4 py-20">
-        <div className="flex items-center space-x-20 justify-center">
+        <div id="hero" className="flex items-center space-x-20 justify-center">
           <div>
             <Image
               src="/zebra-square.jpg"
@@ -53,7 +52,7 @@ const Home = () => {
         </div>
 
         {/* About Me Section */}
-        <div className="mt-20">
+        <div id="about" className="mt-20">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold mb-4 text-black">About Me</h2>
             <div className="h-1 w-20 bg-emerald-600 mx-auto"></div>
@@ -61,7 +60,7 @@ const Home = () => {
         </div>
 
         {/* Experience Section */}
-        <div className="mt-20">
+        <div id="experience" className="mt-20">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold mb-4 text-black">Experience</h2>
             <div className="h-1 w-20 bg-emerald-600 mx-auto"></div>
@@ -83,9 +82,25 @@ const Home = () => {
         </div>
 
         {/* Projects Section */}
-        <div className="mt-20">
+        <div id="projects" className="mt-20">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold mb-4 text-black">Projects</h2>
+            <div className="h-1 w-20 bg-emerald-600 mx-auto"></div>
+          </div>
+        </div>
+
+        {/* What I'm Learning Section */}
+        <div id="learning" className="mt-20">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold mb-4 text-black">What I'm Learning Now</h2>
+            <div className="h-1 w-20 bg-emerald-600 mx-auto"></div>
+          </div>
+        </div>
+        
+        {/* Talk to me Section */}
+        <div id="connects" className="mt-20">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold mb-4 text-black">Talk To Me</h2>
             <div className="h-1 w-20 bg-emerald-600 mx-auto"></div>
           </div>
         </div>
