@@ -10,8 +10,8 @@ interface ExperienceCardProps {
 const ExperienceCard: React.FC<ExperienceCardProps> = ({ title, company, duration, description }) => {
   return (
     <div className="p-6 rounded-lg border border-gray-300 hover:border-emerald-500 transition-colors">
-      <h3 className="text-xl font-bold mb-2 text-gray-900">{title}</h3>
-      <p className="text-emerald-600 mb-2">{company}</p>
+      <h3 className="text-xl font-bold mb-2 text-emerald-600">{title}</h3>
+      <p className="text-gray-600 mb-2">{company}</p>
       <p className="text-gray-600 text-sm mb-4">{duration}</p>
       <p className="text-gray-700">{description}</p>
     </div>
