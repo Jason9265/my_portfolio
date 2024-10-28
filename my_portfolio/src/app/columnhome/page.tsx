@@ -103,12 +103,12 @@ const Columnhome = () => {
             </p>
           </div>
           <div className="bg-gray-900 p-8 rounded-lg">
-            <h3 className="text-5xl font-bold mb-2">50+</h3>
-            <p className="text-gray-400">Satisfied Clients</p>
+            <h3 className="text-5xl font-bold mb-2">AWS Certifications</h3>
+            <p className="text-gray-400">AWS Certified Developer</p>
           </div>
           <div className="bg-gray-900 p-8 rounded-lg">
-            <h3 className="text-5xl font-bold mb-2">AWS Certifications</h3>
-            <p className="text-gray-400"></p>
+            <h3 className="text-5xl font-bold mb-2">Master UoA</h3>
+            <p className="text-gray-400">Computing and Innovation</p>
           </div>
         </div>
 
@@ -146,9 +146,9 @@ const Columnhome = () => {
               description="Developed and maintained multiple web applications"
             />
             <ExperienceCard
-              title="Full Stack Developer"
-              company="Previous Company"
-              duration="2018 - 2020"
+              title="Software Developer"
+              company="iFLYTEK"
+              duration="Feb 2020 - Jul 2020"
               description="Developed and maintained multiple web applications"
             />
           </div>
