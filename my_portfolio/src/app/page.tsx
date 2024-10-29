@@ -4,13 +4,15 @@ import ExperienceCard from "@/components/experienceCard";
 import SocialLink from "@/components/socialLink";
 import ScrollToTopButton from "@/components/ScrollToTopButton";
 import TableOfContents from "@/components/tableOfContents";
+import Header from "@/components/header";
 
 const Home = () => {
   return (
-    <div className="min-h-screen relative pt-16">
+    <div className="min-h-screen relative">
+      <Header />
       <TableOfContents />
 
-      <main className="max-w-6xl mx-auto px-4 py-20">
+      <main className="max-w-7xl mx-auto px-4 py-20">
         <div id="hero" className="flex items-center space-x-20 justify-center">
           <div>
             <Image
