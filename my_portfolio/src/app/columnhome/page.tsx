@@ -12,10 +12,10 @@ import ScrollToTopButton from "@/components/ScrollToTopButton";
 
 const Columnhome = () => {
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen text-gray-900">
       {/* Left Sidebar */}
-      <div className="fixed left-0 top-0 h-screen w-2/12 p-8 border-r border-gray-800 bg-black flex flex-col">
-        <div className="flex flex-col items-center space-y-4 mb-16">
+      <div className="fixed left-0 top-0 h-screen w-2/12 p-8 flex flex-col bg-gray-200">
+        <div className="flex flex-col items-center space-y-4 mb-16 text-emerald-600">
           <div className="w-40 h-40 relative">
             <Image
               src="/zebra-square.jpg"
@@ -34,42 +34,42 @@ const Columnhome = () => {
         <nav className="space-y-4 w-full">
           <a
             href="#home"
-            className="flex items-center space-x-3 text-gray-400 hover:text-white w-full p-2 rounded-lg hover:bg-gray-800"
+            className="flex items-center space-x-3 text-gray-400 hover:text-emerald-600 w-full p-2 rounded-lg "
           >
             <Terminal size={20} />
             <span>Home</span>
           </a>
           <a
             href="#about"
-            className="flex items-center space-x-3 text-gray-400 hover:text-white w-full p-2 rounded-lg hover:bg-gray-800"
+            className="flex items-center space-x-3 text-gray-400 hover:text-emerald-600 w-full p-2 rounded-lg "
           >
             <UserCircle size={20} />
             <span>About Me</span>
           </a>
           <a
             href="#experience"
-            className="flex items-center space-x-3 text-gray-400 hover:text-white w-full p-2 rounded-lg hover:bg-gray-800"
+            className="flex items-center space-x-3 text-gray-400 hover:text-emerald-600 w-full p-2 rounded-lg "
           >
             <Briefcase size={20} />
             <span>Experience</span>
           </a>
           <a
             href="#projects"
-            className="flex items-center space-x-3 text-gray-400 hover:text-white w-full p-2 rounded-lg hover:bg-gray-800"
+            className="flex items-center space-x-3 text-gray-400 hover:text-emerald-600 w-full p-2 rounded-lg "
           >
             <FolderGit2 size={20} />
             <span>Projects</span>
           </a>
           <a
             href="#learning"
-            className="flex items-center space-x-3 text-gray-400 hover:text-white w-full p-2 rounded-lg hover:bg-gray-800"
+            className="flex items-center space-x-3 text-gray-400 hover:text-emerald-600 w-full p-2 rounded-lg "
           >
             <BookOpen size={20} />
             <span>Learning</span>
           </a>
           <a
             href="#contact"
-            className="flex items-center space-x-3 text-gray-400 hover:text-white w-full p-2 rounded-lg hover:bg-gray-800"
+            className="flex items-center space-x-3 text-gray-400 hover:text-emerald-600 w-full p-2 rounded-lg "
           >
             <MessageSquare size={20} />
             <span>Talk To Me</span>
@@ -77,22 +77,22 @@ const Columnhome = () => {
         </nav>
       </div>
 
-      {/* Main Content - changed from ml-64 to ml-[16.666667%] to match the 2/12 width */}
-      <div className="ml-[16.666667%] p-8">
+      {/* Main Content */}
+      <div className="ml-64 p-8">
         {/* Header Section */}
         <div className="flex justify-between items-center mb-12"></div>
 
         {/* Stats Grid */}
         <div className="grid grid-cols-3 gap-6 mb-12">
-          <div className="bg-gray-900 p-8 rounded-lg">
+          <div className=" p-8 rounded-lg border border-gray-300">
             <h3 className="text-5xl font-bold mb-2">100+</h3>
             <p className="text-gray-400">Completed Projects</p>
           </div>
-          <div className="bg-gray-900 p-8 rounded-lg">
+          <div className=" p-8 rounded-lg border border-gray-300">
             <h3 className="text-5xl font-bold mb-2">2+</h3>
             <p className="text-gray-400">Years Developing Experience</p>
           </div>
-          <div className="bg-gray-900 p-8 rounded-lg col-span-1 row-span-2">
+          <div className=" p-8 rounded-lg col-span-1 row-span-2 border border-gray-300">
             <h3 className="text-3xl font-bold mb-4">
               Your ultimate webflow partner
             </h3>
@@ -102,11 +102,11 @@ const Columnhome = () => {
               passion, and vision to realize your ideas as you've imagined them.
             </p>
           </div>
-          <div className="bg-gray-900 p-8 rounded-lg">
+          <div className=" p-8 rounded-lg border border-gray-300">
             <h3 className="text-5xl font-bold mb-2">AWS Certifications</h3>
             <p className="text-gray-400">AWS Certified Developer</p>
           </div>
-          <div className="bg-gray-900 p-8 rounded-lg">
+          <div className=" p-8 rounded-lg border border-gray-300">
             <h3 className="text-5xl font-bold mb-2">Master UoA</h3>
             <p className="text-gray-400">Computing and Innovation</p>
           </div>
@@ -115,7 +115,7 @@ const Columnhome = () => {
         {/* About Me Section */}
         <div id="about" className="mt-20">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4 text-white">About Me</h2>
+            <h2 className="text-3xl font-bold mb-4 text-gray-900">About Me</h2>
             <div className="h-1 w-20 bg-emerald-600 mx-auto"></div>
           </div>
         </div>
@@ -123,7 +123,7 @@ const Columnhome = () => {
         {/* Experience Section */}
         <div id="experience" className="mt-20">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4 text-white">Experience</h2>
+            <h2 className="text-3xl font-bold mb-4 text-gray-900">Experience</h2>
             <div className="h-1 w-20 bg-emerald-600 mx-auto"></div>
           </div>
           <div className="grid md:grid-cols-2 gap-8">
@@ -157,7 +157,7 @@ const Columnhome = () => {
         {/* Projects Section */}
         <div id="projects" className="mt-20">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4 text-white">Projects</h2>
+            <h2 className="text-3xl font-bold mb-4 text-gray-900">Projects</h2>
             <div className="h-1 w-20 bg-emerald-600 mx-auto"></div>
           </div>
         </div>
@@ -165,7 +165,7 @@ const Columnhome = () => {
         {/* What I'm Learning Section */}
         <div id="learning" className="mt-20">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4 text-white">
+            <h2 className="text-3xl font-bold mb-4 text-gray-900">
               What I'm Learning Now
             </h2>
             <div className="h-1 w-20 bg-emerald-600 mx-auto"></div>
@@ -175,7 +175,7 @@ const Columnhome = () => {
         {/* Talk to me Section */}
         <div id="contact" className="mt-20">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4 text-white">Talk To Me</h2>
+            <h2 className="text-3xl font-bold mb-4 text-gray-900">Talk To Me</h2>
             <div className="h-1 w-20 bg-emerald-600 mx-auto"></div>
           </div>
         </div>
