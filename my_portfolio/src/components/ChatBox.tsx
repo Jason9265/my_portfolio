@@ -1,21 +1,21 @@
 "use client";
 import React, { useState } from "react";
-import { MapPin, Paperclip, Smile, Send, X } from "lucide-react";
+import { Smile, Send, X, MessageSquareMore } from "lucide-react";
 
 const ChatBox = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState("");
 
   return (
-    <div className="fixed bottom-4 right-4 z-20 flex flex-col items-end">
+    <div className="fixed bottom-8 right-8 z-20 flex flex-col items-end">
       {/* Chat Window */}
       {isOpen && (
-        <div className="w-[400px] h-[600px] bg-white rounded-lg shadow-xl flex flex-col mb-4 border">
+        <div className="w-96 bg-white rounded-lg shadow-xl flex flex-col mb-4 border">
           {/* Header */}
           <div className="p-4 flex items-center justify-between border-b">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-emerald-600 rounded-lg flex items-center justify-center">
-                <span className="text-white text-sm">TJ</span>
+                <span className="text-white text-sm">JF</span>
               </div>
               <h2 className="text-xl font-bold">Talk with Jason</h2>
             </div>
@@ -25,15 +25,7 @@ const ChatBox = () => {
           <div className="flex-1 p-4 overflow-y-auto">
             <div className="bg-gray-50 p-4 rounded-lg mb-4">
               <p className="mb-2">
-                👋 How can we help? We're usually online during office hours
-                (CEST), but please feel free to write your message anytime.
-              </p>
-            </div>
-            <div className="bg-gray-50 p-4 rounded-lg mb-4">
-              <p>
-                Also consider checking our{" "}
-                <span className="underline">Docs</span> and{" "}
-                <span className="underline">Knowledge Base</span>.
+                👋 How are you today? Glad to chat with you.
               </p>
             </div>
           </div>
@@ -50,12 +42,6 @@ const ChatBox = () => {
               />
               <div className="flex items-center justify-between px-3 pb-3">
                 <div className="flex gap-2">
-                  <button className="p-1 hover:bg-gray-200 rounded-full">
-                    <MapPin size={20} />
-                  </button>
-                  <button className="p-1 hover:bg-gray-200 rounded-full">
-                    <Paperclip size={20} />
-                  </button>
                   <button className="p-1 hover:bg-gray-200 rounded-full">
                     <Smile size={20} />
                   </button>
@@ -77,9 +63,7 @@ const ChatBox = () => {
         {isOpen ? (
           <X size={24} color="white" />
         ) : (
-          <div className="w-6 h-6 bg-white rounded-sm flex items-center justify-center">
-            <span className="text-sm">JF</span>
-          </div>
+            <MessageSquareMore size={24} color="white" />
         )}
       </button>
     </div>
