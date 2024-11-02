@@ -9,19 +9,20 @@ import {
 import Image from "next/image";
 import ExperienceCard from "@/components/experienceCard";
 import ScrollToTopButton from "@/components/ScrollToTopButton";
+import ChatBox from "@/components/ChatBox";
 
 const Columnhome = () => {
   return (
     <div className="min-h-screen text-gray-900">
       {/* Left Sidebar */}
-      <div className="fixed left-0 top-0 h-screen w-2/12 p-8 flex flex-col bg-gray-200">
+      <div className="fixed h-screen p-8 flex flex-col bg-gray-200">
         <div className="flex flex-col items-center space-y-4 mb-16">
           <div className="w-40 h-40 relative">
             <Image
               src="/zebra-square.jpg"
               alt="Jason Feng"
               fill
-              className="rounded-full object-cover bg-purple-600"
+              className="rounded-full object-cover"
             />
           </div>
           <div className="text-center">
@@ -181,6 +182,7 @@ const Columnhome = () => {
         </div>
       </div>
 
+      <ChatBox />
       <ScrollToTopButton />
     </div>
   );
