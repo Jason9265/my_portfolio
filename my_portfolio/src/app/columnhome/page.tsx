@@ -15,7 +15,7 @@ const Columnhome = () => {
     <div className="min-h-screen text-gray-900">
       {/* Left Sidebar */}
       <div className="fixed left-0 top-0 h-screen w-2/12 p-8 flex flex-col bg-gray-200">
-        <div className="flex flex-col items-center space-y-4 mb-16 text-emerald-600">
+        <div className="flex flex-col items-center space-y-4 mb-16">
           <div className="w-40 h-40 relative">
             <Image
               src="/zebra-square.jpg"
