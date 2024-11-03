@@ -1,14 +1,57 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Smile, Send, X, MessageSquareMore } from "lucide-react";
+
+interface Message {
+  type: string;
+  content: string;
+  userId: string;
+  userName?: string;
+}
 
 const ChatBox = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState("");
+  const [messages, setMessages] = useState<Message[]>([]);
+  const wsRef = useRef<WebSocket | null>(null);
+
+  useEffect(() => {
+    wsRef.current = new WebSocket('ws://localhost:8080');
+
+    wsRef.current.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      setMessages(prev => [...prev, data]);
+    };
+
+    return () => {
+      wsRef.current?.close();
+    };
+  }, []);
+
+  const sendMessage = () => {
+    if (message.trim() && wsRef.current) {
+      const messageObj: Message = {
+        type: 'message',
+        content: message,
+        userId: 'self',
+      };
+      
+      setMessages(prev => [...prev, messageObj]);
+      
+      wsRef.current.send(JSON.stringify({ content: message }));
+      setMessage("");
+    }
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  };
 
   return (
     <div className="fixed bottom-8 right-8 z-20 flex flex-col items-end">
-      {/* Chat Window */}
       {isOpen && (
         <div className="w-96 bg-white rounded-lg shadow-xl flex flex-col mb-4 border">
           {/* Header */}
@@ -21,21 +64,31 @@ const ChatBox = () => {
             </div>
           </div>
 
-          {/* Chat Content */}
-          <div className="flex-1 p-4 overflow-y-auto">
-            <div className="bg-gray-50 p-4 rounded-lg mb-4">
-              <p className="mb-2">
-                👋 How are you today? Glad to chat with you.
-              </p>
-            </div>
+          {/* Updated Chat Content */}
+          <div className="flex-1 p-4 overflow-y-auto h-[400px]">
+            {messages.map((msg, index) => (
+              <div
+                key={index}
+                className={`p-4 rounded-lg mb-4 ${
+                  msg.type === 'welcome' || msg.type === 'system'
+                    ? 'bg-gray-50'
+                    : msg.userId === 'self'
+                    ? 'bg-emerald-100 ml-auto'
+                    : 'bg-gray-100'
+                } ${msg.userId === 'self' ? 'max-w-[80%]' : 'max-w-[80%]'}`}
+              >
+                <p className="mb-2">{msg.content}</p>
+              </div>
+            ))}
           </div>
 
-          {/* Input Area */}
+          {/* Updated Input Area */}
           <div className="border-t p-4">
             <div className="bg-gray-100 rounded-lg">
               <textarea
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
+                onKeyPress={handleKeyPress}
                 placeholder="Say something..."
                 className="w-full p-3 bg-transparent resize-none focus:outline-none"
                 rows={1}
@@ -46,7 +99,10 @@ const ChatBox = () => {
                     <Smile size={20} />
                   </button>
                 </div>
-                <button className="text-gray-500">
+                <button 
+                  onClick={sendMessage}
+                  className="text-gray-500 hover:text-emerald-600"
+                >
                   <Send size={20} />
                 </button>
               </div>
