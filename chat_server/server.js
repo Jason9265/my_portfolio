@@ -1,80 +1,113 @@
-// server.js
 require('dotenv').config();
 const WebSocket = require('ws');
 const http = require('http');
 const express = require('express');
 const cors = require('cors');
-const axios = require('axios');
-const crypto = require('crypto');
+const { WebClient } = require('@slack/web-api');
 
 const app = express();
 app.use(cors());
-app.use(express.json());
 
-// Create an HTTP server instance
+// Configure express to parse raw body for Slack verification
+app.use(express.json({
+    verify: (req, res, buf) => {
+        req.rawBody = buf;
+    }
+}));
+
 const server = http.createServer(app);
-
-// Create a WebSocket server instance attached to the HTTP server
 const wss = new WebSocket.Server({ server });
-
-// Store connected clients
 const clients = new Map();
-
-// Generate unique user IDs
 let userIdCounter = 1;
 
-// Add Slack webhook configuration
-const SLACK_WEBHOOK_URL = process.env.SLACK_WEBHOOK_URL;
+// Initialize Slack Web Client
+const slack = new WebClient(process.env.SLACK_BOT_TOKEN);
 
-// Add Slack verification endpoint
+// Slack verification function
 function verifySlackRequest(req, res, next) {
-    const slackSignature = req.headers['x-slack-signature'];
+    const crypto = require('crypto');
+    
+    // Get Slack headers
     const timestamp = req.headers['x-slack-request-timestamp'];
-    const body = JSON.stringify(req.body);
-    
-    const baseString = `v0:${timestamp}:${body}`;
-    const signature = 'v0=' + crypto
-        .createHmac('sha256', process.env.SLACK_SIGNING_SECRET)
-        .update(baseString)
-        .digest('hex');
-    
-    if (signature === slackSignature) {
+    const slackSignature = req.headers['x-slack-signature'];
+
+    // Check if timestamp is too old
+    const currentTime = Math.floor(Date.now() / 1000);
+    if (Math.abs(currentTime - timestamp) > 300) {
+        return res.status(400).send('Timestamp too old');
+    }
+
+    // Create signature
+    const sigBasestring = 'v0:' + timestamp + ':' + req.rawBody;
+    const mySignature = 'v0=' + 
+        crypto.createHmac('sha256', process.env.SLACK_SIGNING_SECRET)
+            .update(sigBasestring, 'utf8')
+            .digest('hex');
+
+    // Compare signatures
+    if (crypto.timingSafeEqual(
+        Buffer.from(mySignature, 'utf8'),
+        Buffer.from(slackSignature, 'utf8')
+    )) {
         next();
     } else {
-        res.status(401).send('Unauthorized');
+        res.status(400).send('Verification failed');
     }
 }
 
-app.post('/slack/events', verifySlackRequest, (req, res) => {
-    // Verify the request is from Slack
-    if (req.body.challenge) {
-        return res.send({ challenge: req.body.challenge });
+// Enhanced Slack events endpoint
+app.post('/slack/events', verifySlackRequest, async (req, res) => {
+    // Handle URL verification challenge
+    if (req.body.type === 'url_verification') {
+        return res.json({ challenge: req.body.challenge });
     }
 
-    // Handle message events from Slack
+    // Log the entire event for debugging
+    console.log('Received Slack event:', JSON.stringify(req.body, null, 2));
+
+    // Handle message events
     if (req.body.event && req.body.event.type === 'message') {
-        const slackMessage = req.body.event.text;
-        
-        // Broadcast message to all WebSocket clients
-        const broadcastMessage = {
-            type: 'message',
-            content: slackMessage,
-            userId: 'slack',
-            userName: 'Slack Admin'
-        };
+        const event = req.body.event;
 
-        // Broadcast to all connected WebSocket clients
-        clients.forEach((_, client) => {
-            if (client.readyState === WebSocket.OPEN) {
-                client.send(JSON.stringify(broadcastMessage));
-            }
-        });
+        // Ignore bot messages to prevent loops
+        if (event.bot_id || event.subtype === 'bot_message' || event.subtype) {
+            return res.sendStatus(200);
+        }
+
+        try {
+            // Get user info
+            const userInfo = await slack.users.info({
+                user: event.user
+            });
+
+            // Create message object
+            const broadcastMessage = {
+                type: 'slack_message',
+                content: event.text,
+                userId: 'slack-' + event.user,
+                userName: userInfo.user.real_name || userInfo.user.name,
+                timestamp: event.ts,
+                channel: event.channel
+            };
+
+            console.log('Broadcasting Slack message:', broadcastMessage);
+
+            // Broadcast to all WebSocket clients
+            clients.forEach((_, client) => {
+                if (client.readyState === WebSocket.OPEN) {
+                    client.send(JSON.stringify(broadcastMessage));
+                }
+            });
+        } catch (error) {
+            console.error('Error processing Slack message:', error);
+        }
     }
 
+    // Always respond with 200 OK to Slack
     res.status(200).send('OK');
 });
 
-// Handle new WebSocket connections
+// WebSocket connection handler
 wss.on('connection', (ws) => {
     const userId = userIdCounter++;
     const userInfo = {
@@ -82,29 +115,28 @@ wss.on('connection', (ws) => {
         name: `User ${userId}`,
     };
     
-    // Store client information
     clients.set(ws, userInfo);
     
-    // Send welcome message to the new client
+    // Send welcome message
     ws.send(JSON.stringify({
         type: 'welcome',
         content: `Welcome, ${userInfo.name}!`,
         userId: userInfo.id
     }));
 
-    // Broadcast to all clients that a new user has joined
+    // Broadcast join message
     broadcast({
         type: 'system',
         content: `${userInfo.name} has joined the chat`,
         userId: 'system'
     }, ws);
 
-    // Handle incoming messages
-    ws.on('message', (message) => {
+    // Handle incoming WebSocket messages
+    ws.on('message', async (message) => {
         try {
             const parsedMessage = JSON.parse(message);
             
-            // Broadcast the message to all clients
+            // Broadcast to other WebSocket clients
             broadcast({
                 type: 'message',
                 content: parsedMessage.content,
@@ -113,66 +145,66 @@ wss.on('connection', (ws) => {
             }, ws);
             
             // Send to Slack
-            sendToSlack(`${userInfo.name}: ${parsedMessage.content}`);
-            
-            console.log(`Received message from ${userInfo.name}:`, parsedMessage.content);
+            try {
+                await slack.chat.postMessage({
+                    channel: process.env.SLACK_CHANNEL_ID,
+                    text: `${userInfo.name}: ${parsedMessage.content}`,
+                });
+                console.log('Message sent to Slack successfully');
+            } catch (error) {
+                console.error('Error sending message to Slack:', error);
+                ws.send(JSON.stringify({
+                    type: 'error',
+                    content: 'Failed to send message to Slack'
+                }));
+            }
         } catch (error) {
-            console.error('Error parsing message:', error);
+            console.error('Error handling WebSocket message:', error);
         }
     });
 
-    // Handle client disconnection
     ws.on('close', () => {
         broadcast({
             type: 'system',
             content: `${userInfo.name} has left the chat`,
             userId: 'system'
         });
-        
-        // Remove client from the map
         clients.delete(ws);
-        console.log(`${userInfo.name} disconnected`);
     });
 
-    // Handle errors
     ws.on('error', (error) => {
-        console.error(`Error from ${userInfo.name}:`, error);
+        console.error(`WebSocket error from ${userInfo.name}:`, error);
     });
 });
 
-// Broadcast message to all clients except the sender
 function broadcast(message, sender) {
     const messageStr = JSON.stringify(message);
     clients.forEach((userInfo, client) => {
         if (client !== sender && client.readyState === WebSocket.OPEN) {
-            client.send(messageStr);
+            try {
+                client.send(messageStr);
+            } catch (error) {
+                console.error('Broadcast error:', error);
+            }
         }
     });
 }
 
-// Add this function to send messages to Slack
-async function sendToSlack(message) {
-    if (!SLACK_WEBHOOK_URL) {
-        console.warn('SLACK_WEBHOOK_URL is not configured');
-        return;
-    }
-    
-    try {
-        await axios.post(SLACK_WEBHOOK_URL, {
-            text: message
-        });
-    } catch (error) {
-        console.error('Error sending message to Slack:', error);
-    }
-}
-
-// Start the server
-const PORT = process.env.PORT || 8080;
-server.listen(PORT, () => {
-    console.log(`WebSocket server is running on port ${PORT}`);
+// Health check endpoint
+app.get('/health', (req, res) => {
+    res.status(200).json({ 
+        status: 'OK',
+        connections: clients.size,
+        timestamp: new Date().toISOString()
+    });
 });
 
-// Optional: Basic health check endpoint
-app.get('/health', (req, res) => {
-    res.status(200).json({ status: 'OK', connections: clients.size });
+const PORT = process.env.PORT || 8080;
+server.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});
+
+// Global error handling
+process.on('unhandledRejection', (error) => {
+    console.error('Unhandled promise rejection:', error);
 });
