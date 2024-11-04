@@ -120,7 +120,12 @@ wss.on('connection', (ws) => {
     // Send welcome message
     ws.send(JSON.stringify({
         type: 'welcome',
-        content: `Welcome, ${userInfo.name}!`,
+        content: `Welcome, ${userInfo.name}`,
+        userId: userInfo.id
+    }));
+    ws.send(JSON.stringify({
+        type: 'welcome',
+        content: `Messages will send directly to Jason's Slack. Try one now.`,
         userId: userInfo.id
     }));
 
