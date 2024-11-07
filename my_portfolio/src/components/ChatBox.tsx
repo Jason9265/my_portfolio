@@ -2,6 +2,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Smile, Send, X, MessageSquareMore } from "lucide-react";
 
+const WS_URL = process.env.NEXT_PUBLIC_WS_URL || 'ws://localhost:8080';
+
 interface Message {
   type: string;
   content: string;
@@ -16,7 +18,7 @@ const ChatBox = () => {
   const wsRef = useRef<WebSocket | null>(null);
 
   useEffect(() => {
-    wsRef.current = new WebSocket('ws://localhost:8080');
+    wsRef.current = new WebSocket(WS_URL);
 
     wsRef.current.onmessage = (event) => {
       const data = JSON.parse(event.data);
