@@ -18,11 +18,33 @@ const Columnhome = () => {
       <div className="fixed h-screen p-8 flex flex-col bg-gray-200">
         <div className="flex flex-col items-center space-y-4 mb-16">
           <div className="w-40 h-40 relative">
+            <div className="absolute w-full h-full bg-emerald-600 rounded-full animate-spin-slow">
+              {Array.from("FULL STACK DEVELOPER  •  JASON FENG  •  ").map((letter, i) => (
+                <div
+                  key={i}
+                  className="absolute w-full h-full"
+                  style={{
+                    transform: `rotate(${i * (360 / 40)}deg)`,
+                  }}
+                >
+                  <span 
+                    className="absolute text-white text-sm"
+                    style={{
+                      left: '50%',
+                      transform: 'translateX(-50%)',
+                      top: '-2px'
+                    }}
+                  >
+                    {letter}
+                  </span>
+                </div>
+              ))}
+            </div>
             <Image
-              src="/zebra-square.jpg"
+              src="/jason-square.jpg"
               alt="Jason Feng"
               fill
-              className="rounded-full object-cover"
+              className="rounded-full object-cover p-4"
             />
           </div>
           <div className="text-center">
@@ -60,13 +82,6 @@ const Columnhome = () => {
           >
             <FolderGit2 size={20} />
             <span>Projects</span>
-          </a>
-          <a
-            href="#learning"
-            className="flex items-center space-x-3 text-gray-400 hover:text-emerald-600 w-full p-2 rounded-lg "
-          >
-            <BookOpen size={20} />
-            <span>Learning</span>
           </a>
           <a
             href="#contact"
@@ -159,16 +174,6 @@ const Columnhome = () => {
         <div id="projects" className="mt-20">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold mb-4 text-gray-900">Projects</h2>
-            <div className="h-1 w-20 bg-emerald-600 mx-auto"></div>
-          </div>
-        </div>
-
-        {/* What I'm Learning Section */}
-        <div id="learning" className="mt-20">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4 text-gray-900">
-              What I'm Learning Now
-            </h2>
             <div className="h-1 w-20 bg-emerald-600 mx-auto"></div>
           </div>
         </div>

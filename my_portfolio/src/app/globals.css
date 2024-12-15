@@ -6,3 +6,16 @@
   background-image: url("/grid.svg");
   background-attachment: fixed;
 }
+
+@keyframes spin {
+  from {
+    transform: rotate(360deg);
+  }
+  to {
+    transform: rotate(0deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: spin 20s linear infinite;
+}
