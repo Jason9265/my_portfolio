@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Mail, Terminal, FileCode2, BookOpen, User } from "lucide-react";
+import { Terminal, FileCode2, BookOpen, User, BookA } from "lucide-react";
 
 interface NavLinkProps {
   href: string;
@@ -40,7 +40,7 @@ const Header: React.FC = () => {
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 border-b border-slate-800 bg-white z-50">
+    <nav className="relative top-0 left-0 right-0 border-b border-slate-800 bg-white z-50">
       <div className="max-w-6xl mx-auto px-4">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center space-x-2">
@@ -54,6 +54,7 @@ const Header: React.FC = () => {
             <NavLink href="/about" icon={<User />} text="About" />
             <NavLink href="/projects" icon={<FileCode2 />} text="Projects" />
             <NavLink href="/blog" icon={<BookOpen />} text="Blog" />
+            <NavLink href="/columnhome" icon={<BookA />} text="Change Style" />
           </div>
           {/* Mobile menu button */}
           <button
@@ -75,6 +76,7 @@ const Header: React.FC = () => {
             <MobileNavLink href="/about" text="About" />
             <MobileNavLink href="/projects" text="Projects" />
             <MobileNavLink href="/blog" text="Blog" />
+            <MobileNavLink href="/columnhome" text="Change Style" />
           </div>
         </div>
       )}
